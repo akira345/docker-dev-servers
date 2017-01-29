@@ -1,0 +1,75 @@
+# mysql
+mysql:
+  restart: always
+  image: mysql:latest
+  volumes:
+    - ./mysql/data:/var/lib/mysql
+    - ./mysql/conf:/etc/mysql/conf.d
+  ports:
+    - "3306:3306"
+  environment:
+    MYSQL_ROOT_PASSWORD: passwd
+    MYSQL_USER: redmine
+    MYSQL_PASSWORD: passwd
+    MYSQL_DATABASE: redmine_production
+# gitbucket mysql
+gitbucket_mysql:
+  restart: always
+  image: mysql:latest
+  volumes:
+    - ./gitbucket_mysql/data:/var/lib/mysql
+    - ./gitbucket_mysql/conf:/etc/mysql/conf.d
+  environment:
+    MYSQL_ROOT_PASSWORD: passwd
+    MYSQL_USER: gitbucket
+    MYSQL_PASSWORD: passwd
+    MYSQL_DATABASE: gitbucket
+# redmine
+redmine:
+  restart: always
+  image: sameersbn/redmine:latest
+  volumes:
+    - ./gitbucket:/gitbucket
+    - ./redmine:/home/redmine/data
+  links:
+    - mysql:mysql
+  environment:
+    TZ: Asia/Tokyo
+    REDMINE_RELATIVE_URL_ROOT: /redmine
+    DB_USER: redmine
+    DB_PASS: passwd
+    SMTP_USER: address@hoge.com
+    SMTP_PASS: password
+# gitbucket
+gitbucket:
+  restart: always
+  image: f99aq8ove/gitbucket
+  links:
+    - gitbucket_mysql:mysql
+  environment:
+    GITBUCKET_DB_URL: "jdbc:mysql://mysql/gitbucket?useUnicode=true&characterEncoding=utf8"
+    GITBUCKET_DB_USER: gitbucket
+    GITBUCKET_DB_PASSWORD: passwd
+    GITBUCKET_OPTS: --prefix=/gitbucket
+  volumes:
+    - ./gitbucket:/gitbucket
+  ports:
+    - "29418:29418"
+# jenkins
+jenkins:
+  restart: always
+  image: jenkins:latest
+  environment:
+    - JENKINS_OPTS=--prefix=/jenkins
+  volumes:
+    - ./jenkins/jenkins:/var/jenkins_home
+# reverse-proxy
+proxy:
+  restart: always
+  build: proxy
+  links:
+    - gitbucket:gitbucket
+    - redmine:redmine
+    - jenkins:jenkins
+  ports:
+    - "80:80"
