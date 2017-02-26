@@ -2,7 +2,7 @@ version: '2'
 volumes:
   redmine_mysql_data:
     driver: local
-  gitbucket_mysql_data:
+  gitbucket_postgres_data:
     driver: local
   redmine_data:
     driver: local
@@ -18,25 +18,22 @@ services:
     volumes:
       - redmine_mysql_data:/var/lib/mysql
       - ./redmine_mysql/conf:/etc/mysql/conf.d
-    ports:
-      - "3306:3306"
     environment:
       MYSQL_ROOT_PASSWORD: passwd
       MYSQL_USER: redmine
       MYSQL_PASSWORD: passwd
       MYSQL_DATABASE: redmine_production
-  # gitbucket mysql
-  gitbucket_mysql:
+  # gitbucket postgres
+  gitbucket_postgres:
     restart: always
-    image: mysql:5.6
+    image: postgres:9.6
     volumes:
-      - gitbucket_mysql_data:/var/lib/mysql
-      - ./gitbucket_mysql/conf:/etc/mysql/conf.d
+      - gitbucket_postgres_data:/var/lib/postgresql
     environment:
-      MYSQL_ROOT_PASSWORD: passwd
-      MYSQL_USER: gitbucket
-      MYSQL_PASSWORD: passwd
-      MYSQL_DATABASE: gitbucket
+      POSTGRES_PASSWORD: passwd
+      POSTGRES_USER: gitbucket
+      POSTGRES_DB: gitbucket
+      POSTGRES_INITDB_ARGS: --encoding=UTF-8 --locale=C
   # redmine
   redmine:
     restart: always
@@ -44,11 +41,12 @@ services:
     volumes:
       - gitbucket_data:/gitbucket
       - redmine_data:/home/redmine/data
-    links:
-      - redmine_mysql:mysql
+    depends_on:
+      - redmine_mysql
     environment:
       TZ: Asia/Tokyo
       REDMINE_RELATIVE_URL_ROOT: /redmine
+      DB_HOST: redmine_mysql
       DB_USER: redmine
       DB_PASS: passwd
       SMTP_USER: address@hoge.com
@@ -57,10 +55,10 @@ services:
   gitbucket:
     restart: always
     image: f99aq8ove/gitbucket
-    links:
-      - gitbucket_mysql:mysql
+    depends_on:
+      - gitbucket_postgres
     environment:
-      GITBUCKET_DB_URL: "jdbc:mysql://mysql/gitbucket?useUnicode=true&characterEncoding=utf8"
+      GITBUCKET_DB_URL: "jdbc:postgresql://gitbucket_postgres/gitbucket"
       GITBUCKET_DB_USER: gitbucket
       GITBUCKET_DB_PASSWORD: passwd
       GITBUCKET_OPTS: --prefix=/gitbucket
@@ -80,6 +78,10 @@ services:
   proxy:
     restart: always
     build: proxy
+    depends_on:
+      - jenkins
+      - redmine
+      - gitbucket
     links:
       - gitbucket:gitbucket
       - redmine:redmine

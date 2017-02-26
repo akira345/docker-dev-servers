@@ -1,13 +1,12 @@
 Dockerで開発に必要なRedmine、Jenkins、GitBucker、MySQLサーバ環境を一気に構築します。  
 
-Jenkinsのホームディレクトリだけは権限の問題で個別に設定する必要があります。
+動作環境は以下の通りです。
 
 ```
-# mkdir -p ./jenkins/jenkins
-# chown 1000 ./jenkins/jenkins
+docker: Docker version 1.13.1, build 092cba3
+docker-compose: docker-compose version 1.11.1, build 7afaa436
 ```
 
-を実行し、最初に作成してください。
 
 docker-compose.ymlを適当に編集後  
 
