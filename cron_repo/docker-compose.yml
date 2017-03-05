@@ -1,0 +1,10 @@
+version: '2'
+services:
+  # redmine
+  cron_repo:
+    build: ./
+    environment:
+      API_KEY: 
+    volumes:
+      - ./repos:/repos
+      
