@@ -1,4 +1,4 @@
-FROM ruby:2.4.0
+FROM ruby:2.6.1
 ENV API_KEY 123456
 RUN gem install activeresource --no-ri --no-rdoc
 # 設定済みreposman.rbをコピー
