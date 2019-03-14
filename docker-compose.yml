@@ -14,7 +14,7 @@ services:
   # redmine_mysql
   redmine_mysql:
     restart: always
-    image: mysql:5.7
+    image: mysql:8
     volumes:
       - redmine_mysql_data:/var/lib/mysql
       - ./redmine_mysql/conf:/etc/mysql/conf.d
@@ -26,7 +26,7 @@ services:
   # gitbucket postgres
   gitbucket_postgres:
     restart: always
-    image: postgres:9.6
+    image: postgres:11
     volumes:
       - gitbucket_postgres_data:/var/lib/postgresql
     environment:
@@ -37,7 +37,7 @@ services:
   # redmine
   redmine:
     restart: always
-    image: sameersbn/redmine:latest
+    image: sameersbn/redmine:4.0.0-1
     volumes:
       - gitbucket_data:/gitbucket
       - redmine_data:/home/redmine/data
@@ -49,7 +49,7 @@ services:
       DB_HOST: redmine_mysql
       DB_USER: redmine
       DB_PASS: passwd
-      SMTP_USER: address@hoge.com
+      SMTP_USER: address@example.com
       SMTP_PASS: password
   # gitbucket
   gitbucket:
@@ -69,7 +69,7 @@ services:
   # jenkins
   jenkins:
     restart: always
-    image: jenkins:latest
+    image: jenkins/jenkins:lts
     environment:
       - JENKINS_OPTS=--prefix=/jenkins
     volumes:
