@@ -1,5 +1,5 @@
 # https://registry.hub.docker.com/_/nginx/
-FROM nginx:1.15
+FROM nginx:1.16
 
 # 設定ファイルをコピー
 COPY conf/nginx.conf /etc/nginx/nginx.conf
