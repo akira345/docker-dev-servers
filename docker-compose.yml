@@ -26,7 +26,7 @@ services:
   # gitbucket postgres
   gitbucket_postgres:
     restart: always
-    image: postgres:11
+    image: postgres:13
     volumes:
       - gitbucket_postgres_data:/var/lib/postgresql
     environment:
@@ -37,7 +37,7 @@ services:
   # redmine
   redmine:
     restart: always
-    image: sameersbn/redmine:4.1.1-1
+    image: sameersbn/redmine:4.2.0-1
     volumes:
       - gitbucket_data:/gitbucket
       - redmine_data:/home/redmine/data
