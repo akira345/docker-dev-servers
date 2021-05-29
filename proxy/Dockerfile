@@ -1,5 +1,5 @@
 # https://registry.hub.docker.com/_/nginx/
-FROM nginx:1.20
+FROM nginx:1.21
 
 # 設定ファイルをコピー
 COPY conf/nginx.conf /etc/nginx/nginx.conf
