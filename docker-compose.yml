@@ -26,7 +26,7 @@ services:
   # gitbucket postgres
   gitbucket_postgres:
     restart: always
-    image: postgres:14
+    image: postgres:15
     volumes:
       - gitbucket_postgres_data:/var/lib/postgresql
     environment:
