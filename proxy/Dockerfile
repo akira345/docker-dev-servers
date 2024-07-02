@@ -1,5 +1,5 @@
 # https://registry.hub.docker.com/_/nginx/
-FROM nginx:1.26
+FROM nginx:1.27
 
 # 設定ファイルをコピー
 COPY conf/nginx.conf /etc/nginx/nginx.conf
