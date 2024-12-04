@@ -14,7 +14,7 @@ services:
   # redmine_mysql
   redmine_mysql:
     restart: always
-    image: mysql:8
+    image: mysql:9
     volumes:
       - redmine_mysql_data:/var/lib/mysql
       - ./redmine_mysql/conf:/etc/mysql/conf.d
