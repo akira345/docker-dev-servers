@@ -37,7 +37,7 @@ services:
   # redmine
   redmine:
     restart: always
-    image: sameersbn/redmine:6.0.1-1
+    image: sameersbn/redmine:6.0.4-1
     volumes:
       - gitbucket_data:/gitbucket
       - redmine_data:/home/redmine/data
